@@ -18,7 +18,6 @@ const testRecipe = {
 };
 
 
-
 describe(endpointUrl, () => {
     /*it checks that when you create a recipe all the values are store,
     that we send a succeful response back when the new recipe is created and
@@ -57,44 +56,24 @@ describe(endpointUrl, () => {
     /*It test the update function, each value that was on the database
     and coments that were just add */
     it("PUT " + endpointUrl, async () => {
-        const response = await request(app)
+        const res = await request(app)
             .put(endpointUrl + newRecipeId)
             .send(testRecipe);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(testRecipe.name);
-        expect(response.body.description).toBe(testRecipe.description);
-        expect(response.body.category).toStrictEqual(testRecipe.category);
-        expect(response.body.image).toBe(testRecipe.image);
-        expect(response.body.ingredients).toStrictEqual(testRecipe.ingredients);
-        expect(response.body.instructions).toStrictEqual(testRecipe.instructions);
-        expect(response.body.coments).toStrictEqual(testRecipe.coments);
+        expect(res.statusCode).toBe(200);
+        expect(res.body.name).toBe(testRecipe.name);
+        expect(res.body.description).toBe(testRecipe.description);
+        expect(res.body.category).toStrictEqual(testRecipe.category);
+        expect(res.body.image).toBe(testRecipe.image);
+        expect(res.body.ingredients).toStrictEqual(testRecipe.ingredients);
+        expect(res.body.instructions).toStrictEqual(testRecipe.instructions);
+        expect(res.body.coments).toStrictEqual(testRecipe.coments);
     });
-    //it test the error handler on the uodate controller and the response
+    //it test the error handler on the update controller and the response
     it("should return 404 on PUT " + endpointUrl, async () => {
-        const response = await request(app)
+        const res = await request(app)
             .put(endpointUrl + nonExistingRecipeId)
             .send(testRecipe);
-        expect(response.statusCode).toBe(404);
-    });
-    //It test that the recipe was deleted succefully
-    test("HTTP DELETE", async () => {
-        const response = await request(app)
-            .delete(endpointUrl + newRecipeId)
-            .send();
-        expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(newRecipe.name);
-        expect(response.body.description).toBe(newRecipe.description);
-        expect(response.body.category).toStrictEqual(newRecipe.category);
-        expect(response.body.image).toBe(newRecipe.image);
-        expect(response.body.ingredients).toStrictEqual(newRecipe.ingredients);
-        expect(response.body.instructions).toStrictEqual(newRecipe.instructions);
-    });
-    //checks the error handle of the delete controller
-    test("HTTP DELETE 404", async () => {
-        const response = await request(app)
-            .delete(endpointUrl + nonExistingRecipeId)
-            .send();
-        expect(response.statusCode).toBe(404);
+        expect(res.statusCode).toBe(404);
     });
     //Test to get all recipes
     test("GET " + endpointUrl, async () => {
@@ -130,5 +109,25 @@ describe(endpointUrl, () => {
             endpointUrl + "5d5fff416bef3c07ecf11f76"
         );
         expect(response.statusCode).toBe(404);
+    });
+    //It test that the recipe was deleted succefully
+    test("HTTP DELETE", async () => {
+        const res = await request(app)
+            .delete(endpointUrl + newRecipeId)
+            .send();
+        expect(res.statusCode).toBe(200);
+        expect(res.body.name).toBe(newRecipe.name);
+        expect(res.body.description).toBe(newRecipe.description);
+        expect(res.body.category).toStrictEqual(newRecipe.category);
+        expect(res.body.image).toBe(newRecipe.image);
+        expect(res.body.ingredients).toStrictEqual(newRecipe.ingredients);
+        expect(res.body.instructions).toStrictEqual(newRecipe.instructions);
+    });
+    //checks the error handle of the delete controller
+    test("HTTP DELETE 404", async () => {
+        const res = await request(app)
+            .delete(endpointUrl + nonExistingRecipeId)
+            .send();
+        expect(res.statusCode).toBe(404);
     });
 });
