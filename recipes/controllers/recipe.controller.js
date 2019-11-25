@@ -30,3 +30,36 @@ exports.getRecipeById = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.updateRecipe = async (req, res, next) => {
+    try {
+        const updatedRecipe = await RecipeModel.findByIdAndUpdate(
+            req.params.recipeId,
+            req.body, {
+                new: true,
+                useFindAndModify: false
+            }
+        );
+        if (updatedRecipe) {
+            res.status(200).json(updatedRecipe);
+        } else {
+            res.status(404).send();
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.deleteRecipe = async (req, res, next) => {
+    try {
+        const deletedRecipe = await RecipeModel.findByIdAndDelete(req.params.recipeId);
+
+        if (deletedRecipe) {
+            res.status(200).json(deletedRecipe);
+        } else {
+            res.status(404).send();
+        }
+    } catch (err) {
+        next(err);
+    }
+};
