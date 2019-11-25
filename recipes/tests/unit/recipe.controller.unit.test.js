@@ -4,18 +4,44 @@ const httpMocks = require("node-mocks-http");
 const newRecipe = require("../mock-data/new-recipe.json");
 const allRecipes = require("../mock-data/all-recipes.json");
 
-//We mock the function to know if we are calling it
 RecipeModel.create = jest.fn();
 RecipeModel.find = jest.fn();
+RecipeModel.findById = jest.fn();
 
-//We mock our data
 let req, res, next;
-
 beforeEach(() => {
     req = httpMocks.createRequest();
     res = httpMocks.createResponse();
     next = jest.fn();
 });
+
+describe("RecipeController.getRecipeById", () => {
+    it("should have a getRecipeById", () => {
+        expect(typeof RecipeController.getRecipeById).toBe("function");
+    });
+    it("should call RecipeModel.findById with route parameters", async () => {
+        req.params.recipeId = "5d5ecb5a6e598605f06cb945";
+        await RecipeController.getRecipeById(req, res, next);
+        expect(RecipeModel.findById).toBeCalledWith("5d5ecb5a6e598605f06cb945");
+    });
+    it("should return json body and response code 200", async () => {
+        RecipeModel.findById.mockReturnValue(newRecipe);
+        await RecipeController.getRecipeById(req, res, next);
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(newRecipe);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+    it("should do error handling", async () => {
+        const errorMessage = {
+            message: "error finding recipeModel"
+        };
+        const rejectedPromise = Promise.reject(errorMessage);
+        RecipeModel.findById.mockReturnValue(rejectedPromise);
+        await RecipeController.getRecipeById(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage);
+    });
+});
+
 describe("RecipeController.getRecipes", () => {
     it("should have a getRecipes function", () => {
         expect(typeof RecipeController.getRecipes).toBe("function");
@@ -40,39 +66,39 @@ describe("RecipeController.getRecipes", () => {
         await RecipeController.getRecipes(req, res, next);
         expect(next).toHaveBeenCalledWith(errorMessage);
     });
+    it("should return 404 when item doesnt exist", async () => {
+        RecipeModel.findById.mockReturnValue(null);
+        await RecipeController.getRecipeById(req, res, next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
 });
 
-describe("RecipeController.getRecipes", () => {
-
-});
 describe("RecipeController.createRecipe", () => {
     beforeEach(() => {
         req.body = newRecipe;
-    })
-    it("Should have a createRecipe function", () => {
+    });
+
+    it("should have a createRecipe function", () => {
         expect(typeof RecipeController.createRecipe).toBe("function");
     });
-    it("Should call RecipeMode.create", () => {
-        //We don't test if mongoose works right we trust it does
-        //we test that the code I write works 
-
+    it("should call RecipeModel.create", () => {
         RecipeController.createRecipe(req, res, next);
         expect(RecipeModel.create).toBeCalledWith(newRecipe);
     });
-    it("Should return 201 response code", async () => {
-
+    it("should return 201 response code", async () => {
         await RecipeController.createRecipe(req, res, next);
         expect(res.statusCode).toBe(201);
         expect(res._isEndCalled()).toBeTruthy();
     });
-    it("Should return the json body in the response", async () => {
+    it("should return json body in response", async () => {
         RecipeModel.create.mockReturnValue(newRecipe);
         await RecipeController.createRecipe(req, res, next);
         expect(res._getJSONData()).toStrictEqual(newRecipe);
     });
-    it("should handle erros", async () => {
+    it("should handle errors", async () => {
         const errorMessage = {
-            message: "Describe property missing"
+            message: "Done property missing"
         };
         const rejectedPromise = Promise.reject(errorMessage);
         RecipeModel.create.mockReturnValue(rejectedPromise);

@@ -17,3 +17,16 @@ exports.getRecipes = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.getRecipeById = async (req, res, next) => {
+    try {
+        const recipeModel = await RecipeModel.findById(req.params.recipeId);
+        if (recipeModel) {
+            res.status(200).json(recipeModel);
+        } else {
+            res.status(404).send();
+        }
+    } catch (err) {
+        next(err);
+    }
+};

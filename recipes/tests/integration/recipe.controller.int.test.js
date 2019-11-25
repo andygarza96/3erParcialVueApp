@@ -4,6 +4,9 @@ const newRecipe = require("../mock-data/new-recipe.json");
 
 const endpointUrl = "/recipes/";
 
+//We start a variable to get a recipe ID
+let firstRecipe;
+
 describe(endpointUrl, () => {
     test("GET " + endpointUrl, async () => {
         const response = await request(app).get(endpointUrl);
@@ -17,8 +20,28 @@ describe(endpointUrl, () => {
         expect(response.body[0].ingredients).toBeDefined();
         expect(response.body[0].instructions).toBeDefined();
         expect(response.body[0].coments).toBeDefined();
+        firstRecipe = response.body[0];
 
     });
+    test("GET by Id " + endpointUrl + ":recipeId", async () => {
+        const response = await request(app).get(endpointUrl + firstRecipe._id);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(firstRecipe.name);
+        expect(response.body.description).toBe(firstRecipe.description);
+        expect(response.body.category).toStrictEqual(firstRecipe.category);
+        expect(response.body.image).toBe(firstRecipe.image);
+        expect(response.body.ingredients).toStrictEqual(firstRecipe.ingredients);
+        expect(response.body.instructions).toStrictEqual(firstRecipe.instructions);
+        expect(response.body.coments).toStrictEqual(firstRecipe.coments);
+    });
+    test("GET recipeby id doesn't exist" + endpointUrl + ":recipeId", async () => {
+        const response = await request(app).get(
+            endpointUrl + "5d5fff416bef3c07ecf11f76"
+        );
+        expect(response.statusCode).toBe(404);
+    });
+
+
     it("POST" + endpointUrl, async () => {
         const response = await request(app)
             .post(endpointUrl)
