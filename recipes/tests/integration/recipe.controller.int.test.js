@@ -19,13 +19,18 @@ describe(endpointUrl, () => {
         expect(response.body[0].coments).toBeDefined();
 
     });
-    it("POST " + endpointUrl, async () => {
+    it("POST" + endpointUrl, async () => {
         const response = await request(app)
             .post(endpointUrl)
             .send(newRecipe);
         expect(response.statusCode).toBe(201);
-        expect(response.body.title).toBe(newRecipe.title);
-        expect(response.body.done).toBe(newRecipe.done);
+        expect(response.body.name).toBe(newRecipe.name);
+        expect(response.body.description).toBe(newRecipe.description);
+        expect(response.body.category).toStrictEqual(newRecipe.category);
+        expect(response.body.image).toBe(newRecipe.image);
+        expect(response.body.ingredients).toStrictEqual(newRecipe.ingredients);
+        expect(response.body.instructions).toStrictEqual(newRecipe.instructions);
+
     });
     it(
         "should return error 500 on malformed data with POST" + endpointUrl,
@@ -33,7 +38,7 @@ describe(endpointUrl, () => {
             const response = await request(app)
                 .post(endpointUrl)
                 .send({
-                    title: "Missing done property"
+                    title: "Missing description property"
                 });
             expect(response.statusCode).toBe(500);
             expect(response.body).toStrictEqual({
