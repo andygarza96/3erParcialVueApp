@@ -1,5 +1,9 @@
+//this is the controller for everything that a is related to a recipe
 const RecipeModel = require("../model/recipe.model");
 
+
+/*Creates one recipe and catch if there is data missing ot data errors
+and sends a message with the error back*/
 exports.createRecipe = async (req, res, next) => {
     try {
         const createdModel = await RecipeModel.create(req.body);
@@ -9,6 +13,8 @@ exports.createRecipe = async (req, res, next) => {
     }
 };
 
+/*Gets all recipes and catch if there is an error 
+and sends a message with the error back*/
 exports.getRecipes = async (req, res, next) => {
     try {
         const allRecipes = await RecipeModel.find({});
@@ -18,6 +24,8 @@ exports.getRecipes = async (req, res, next) => {
     }
 };
 
+/*Gets one recipe by Id and catch if is a non existing Id 
+or if there is an error and sends a message with the error back*/
 exports.getRecipeById = async (req, res, next) => {
     try {
         const recipeModel = await RecipeModel.findById(req.params.recipeId);
@@ -31,6 +39,9 @@ exports.getRecipeById = async (req, res, next) => {
     }
 };
 
+/*Updates one recipe by its Id, it handles error and non existing Ids
+and sends a message with the error back.
+With this controller we can also add the comments*/
 exports.updateRecipe = async (req, res, next) => {
     try {
         const updatedRecipe = await RecipeModel.findByIdAndUpdate(
@@ -49,7 +60,8 @@ exports.updateRecipe = async (req, res, next) => {
         next(err);
     }
 };
-
+/*this is to delete a recipe by its Id, it handles errors,
+ catch non existing Ids and sends a message with the error back*/
 exports.deleteRecipe = async (req, res, next) => {
     try {
         const deletedRecipe = await RecipeModel.findByIdAndDelete(req.params.recipeId);

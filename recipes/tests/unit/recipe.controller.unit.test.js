@@ -4,8 +4,10 @@
   const newRecipe = require("../mock-data/new-recipe.json");
   const allRecipes = require("../mock-data/all-recipes.json");
 
+  //mocks the recipe.model for unit testing
   jest.mock("../../model/recipe.model");
 
+  //we simulate all the values for the arguments we need to run our tests
   let req, res, next;
   const recipeId = "5d5ecb5a6e598605f06cb945";
   beforeEach(() => {
@@ -13,7 +15,7 @@
       res = httpMocks.createResponse();
       next = jest.fn();
   });
-
+  //I didn't saw the necesity to explain the test since the describes and its are detailed
   describe("RecipeController.deleteRecipe", () => {
       it("should have a deleteRecipe function", () => {
           expect(typeof RecipeController.deleteRecipe).toBe("function");

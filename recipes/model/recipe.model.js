@@ -1,3 +1,4 @@
+//this is the model of a recipe
 const mongoose = require('mongoose');
 
 const RecipeSchema = mongoose.Schema({
