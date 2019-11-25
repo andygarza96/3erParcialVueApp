@@ -1,7 +1,7 @@
-const RecipeModel = require("../moldel/recipe.model");
+const RecipeModel = require("../model/recipe.model");
 
 
-exports.createRecipe = (req, res, next) => {
-    const createdModel = RecipeModel.create(req.body);
+exports.createRecipe = async (req, res, next) => {
+    const createdModel = await RecipeModel.create(req.body);
     res.status(201).json(createdModel);
 };
