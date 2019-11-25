@@ -7,7 +7,8 @@ const RecipeSchema = mongoose.Schema({
         default: 'unknown'
     },
     description: {
-        type: String
+        type: String,
+        required: true
     },
     category: {
         // Array of strings
@@ -28,7 +29,6 @@ const RecipeSchema = mongoose.Schema({
     ingredients: {
         type: [String],
         required: true,
-        default: 'unknown'
     },
     instructions: {
         type: Array,
