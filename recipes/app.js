@@ -1,28 +1,9 @@
 const express = require("express");
 const recipeRoutes = require("./routes/recipe.routes");
 const app = express();
-const mongoose = require('mongoose');
+const mongodb = require("./mongodb/mongodb.connect");
 
-// ============
-// Database configuration
-// ============
-// Compatibility of MongoDB >=3.6 with Mongoose < v5.0.0
-mongoose.plugin(schema => {
-    schema.options.usePushEach = true
-});
-
-// Native promises in Mongoose
-mongoose.Promise = Promise;
-
-// Connect
-mongoose.connect('mongodb://localhost:27017/recipesApp', {
-    useNewUrlParser: true
-});
-
-mongoose.connection.on("open", function () {
-    // console.log("MongoDB connection opened");
-});
-
+mongodb.connect();
 
 app.use(express.json());
 
@@ -33,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 
-// app.listen(3000, () => {
-//     console.log("Server is now running!");
-// });
+app.listen(3000, () => {
+    console.log("Server is now running!");
+});
 module.exports = app;

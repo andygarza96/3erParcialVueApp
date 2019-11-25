@@ -30,7 +30,7 @@ const RecipeSchema = mongoose.Schema({
         required: true,
         default: 'unknown'
     },
-    instuctions: {
+    instructions: {
         type: Array,
         required: true,
         default: 'unknown'
